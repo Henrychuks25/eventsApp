@@ -1,12 +1,11 @@
 <?php
 
-namespace Classiebit\Eventmie\Http\Controllers\Auth;
-use Facades\Classiebit\Eventmie\Eventmie;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Classiebit\Eventmie\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -29,7 +28,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
-    
+
 
     /**
      * Create a new controller instance.
@@ -37,7 +36,7 @@ class LoginController extends Controller
      * @return void
      */
     public function __construct()
-    {  
+    {
          // language change
         $this->middleware('common');
         $this->middleware('guest')->except('logout');
@@ -48,15 +47,15 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function showLoginForm()
     {
-        
-        if (\Auth::check()) {
+
+        if (Auth::check()) {
             return redirect()->route('eventmie.welcome');
         }
-        return Eventmie::view('eventmie::auth.login');
+        return view('auth.login');
     }
 
     /**
@@ -64,35 +63,35 @@ class LoginController extends Controller
      */
 
     // check if authenticated, then redirect to welcome page
-    protected function authenticated() 
+    protected function authenticated()
     {
-        
-        if (\Auth::check()) {
+
+        if (Auth::check()) {
             return redirect()->route('eventmie.welcome');
         }
     }
 
-    public function login(Request $request) 
+    public function login(Request $request)
     {
-        
+
         $this->validate($request, [
-            
+
             'email'    => 'required|email',
             'password' => 'required'
-            
+
         ]);
 
-        $flag = \Auth::attempt ([
+        $flag = Auth::attempt ([
             'email' => $request->get ( 'email' ),
-            'password' => $request->get ( 'password' ) 
+            'password' => $request->get ( 'password' )
         ]);
-        
-        if ($flag) 
+
+        if ($flag)
         {
             $redirect = !empty(config('eventmie.route.prefix')) ? config('eventmie.route.prefix') : '/';
             return redirect($redirect);
-        } 
-        else 
+        }
+        else
         {
             return error_redirect( __('eventmie::em.login').' '.__('eventmie::em.failed') );
         }

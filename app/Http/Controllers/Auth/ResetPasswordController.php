@@ -1,12 +1,13 @@
 <?php
 
-namespace Classiebit\Eventmie\Http\Controllers\Auth;
-use Facades\Classiebit\Eventmie\Eventmie;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
-use Classiebit\Eventmie\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordController extends Controller
 {
@@ -53,45 +54,45 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        return Eventmie::view('eventmie::auth.passwords.reset', ['token' => $token, 'email' => $request->email]);
+        return view('eventmie::auth.passwords.reset', ['token' => $token, 'email' => $request->email]);
     }
 
-    // forgot password reset 
+    // forgot password reset
     public function reset(Request $request)
     {
-        
+
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required'
         ]);
 
-        // get token from password_resests table 
+        // get token from password_resests table
         $record     =  \DB::table('password_resets')->where(['email' => $request->email])->first();
 
         if(!empty($record))
         {
             // if token match then will reset password
-            if(\Hash::check($request->token, $record->token));
+            if(Hash::check($request->token, $record->token));
             {
                 $user = User::where(['email' => $request->email])->first();
-                
+
                 if(!empty($user))
                 {
-                    $user->password = \Hash::make($request->password);
+                    $user->password = Hash::make($request->password);
                     $user->save();
 
-                    \Auth::loginUsingId($user->id, TRUE);
+                    Auth::loginUsingId($user->id, TRUE);
 
                     $msg = __('eventmie::em.password').' '.__('eventmie::em.reset').' '.__('eventmie::em.successfully');
                     return success_redirect($msg, route('eventmie.events_index'));
-                }    
+                }
 
             }
-        }    
+        }
 
         return redirect()->route('eventmie.login');
-       
+
     }
 
     /**

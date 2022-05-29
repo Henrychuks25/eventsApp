@@ -7,7 +7,7 @@ use App\Http\Controllers\MyEventsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\User;
-use Classiebit\Eventmie\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use TCG\Voyager\Voyager;

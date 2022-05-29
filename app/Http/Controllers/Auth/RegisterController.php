@@ -1,16 +1,18 @@
 <?php
 
-namespace Classiebit\Eventmie\Http\Controllers\Auth;
-use Facades\Classiebit\Eventmie\Eventmie;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\User;
+use App\Notifications\MailNotification;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-use Classiebit\Eventmie\Models\User;
-use Classiebit\Eventmie\Notifications\MailNotification;
+//use Classiebit\Eventmie\Models\User;
+//use Classiebit\Eventmie\Notifications\MailNotification;
 
 class RegisterController extends Controller
 {
@@ -34,7 +36,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/';
 
-    
+
 
     /**
      * Create a new controller instance.
@@ -57,8 +59,8 @@ class RegisterController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
-    {   
-        return Eventmie::view('eventmie::auth.register');
+    {
+        return view('eventmie::auth.register');
     }
 
     /**
@@ -91,8 +93,8 @@ class RegisterController extends Controller
                     'password'  => Hash::make($data['password']),
                     'role_id'  => 2,
                 ]);
-        
-        // ====================== Notification ====================== 
+
+        // ====================== Notification ======================
         $mail['mail_message'] = "Email message body";
         $mail['greeting']     = "Greetings";
         $mail['mail_subject'] = "Create New User Successfully";
@@ -103,14 +105,14 @@ class RegisterController extends Controller
         $notification_ids       = [
             1 // admin
         ];
-        
+
         $users = User::whereIn('id', $notification_ids)->get();
-        \Notification::send($users, new MailNotification($mail));
-        // ====================== Notification ======================       
-        
+        Notification::send($users, new MailNotification($mail));
+        // ====================== Notification ======================
+
         return $user;
     }
 
-    
-    
+
+
 }

@@ -1,4 +1,4 @@
-@extends('eventmie::auth.authapp')
+@extends('auth.authapp')
 
 @section('title')
     @lang('eventmie::em.forgot') @lang('eventmie::em.password')
@@ -35,6 +35,6 @@
             </div>
         </div>
     </div>
-</div>    
-    
+</div>
+
 @endsection

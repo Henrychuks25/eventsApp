@@ -1,10 +1,10 @@
 <?php
 
-namespace Classiebit\Eventmie\Http\Controllers\Auth;
-use Facades\Classiebit\Eventmie\Eventmie;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
@@ -46,14 +46,14 @@ class VerificationController extends Controller
      * Show the email verification notice.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function show(Request $request)
     {
         return $request->user()->hasVerifiedEmail()
                         ? redirect($this->redirectPath())
-                        : Eventmie::view('eventmie::auth.verify');
+                        : view('eventmie::auth.verify');
     }
-    
-     
+
+
 }

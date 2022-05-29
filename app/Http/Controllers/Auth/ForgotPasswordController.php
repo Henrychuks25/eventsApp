@@ -1,7 +1,7 @@
 <?php
 
-namespace Classiebit\Eventmie\Http\Controllers\Auth;
-use Facades\Classiebit\Eventmie\Eventmie;
+namespace App\Http\Controllers\Auth;
+//use Facades\Classiebit\Eventmie\Eventmie;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -39,31 +39,31 @@ class ForgotPasswordController extends Controller
     /**
      * Display the form to request a password reset link.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function showLinkRequestForm()
     {
-        return Eventmie::view('eventmie::auth.passwords.email');
+        return view('auth.passwords.email');
     }
 
     public function sendResetLinkEmail(Request $request)
     {
         $this->validate($request, ['email' => 'required|email']);
-        
+
         $response = $this->broker()->sendResetLink(
             $request->only('email')
         );
 
-        
+
         return back()->with('status', __('eventmie::em.reset_email_info'));
     }
 
-    
+
 
     /**
      * Get the broker to be used during password reset.
      *
-     * @return PasswordBroker
+     * @return \Illuminate\Contracts\Auth\PasswordBroker
      */
     public function broker()
     {
